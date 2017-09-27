@@ -6,6 +6,11 @@
 
 # Sources
 
+Sources from this project are from:
+
+https://github.com/rudeboybert/fivethirtyeight
+
+
 # contact
 
 contact rhendrickson at smu edu
