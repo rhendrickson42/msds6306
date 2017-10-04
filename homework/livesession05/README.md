@@ -2,6 +2,8 @@
 
 # This repository is for data projects related to Data Science
 
+https://github.com/rhendrickson42/msds6306/tree/master/homework/livesession05
+
 # Topics
 Live Session Unit 05 - Tidy Data
 
