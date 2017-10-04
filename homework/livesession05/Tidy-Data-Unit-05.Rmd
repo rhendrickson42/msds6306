@@ -72,17 +72,24 @@ y2015 <- read.table(github_local_2, header=FALSE, sep=",")
 names(y2015)[c(1,2,3)] <- c("First_Name","Gender","Amount_Of_Children_2015")
 
 # display the last ten rows
+# describe something interesting about these 10 rows
+
 tail(y2015, n = 10L)
 
+```
 
-# merge data
-# MergedDataset <- mergeRows(y2015, y2016, common.only=FALSE)
-# MergedDataset2 <- mergeRows(y2015, y2016, common.only=TRUE)
+#### Describe something interesting about these last 10 rows
 
-# make sure no NAs
-# sapply(MergedDataset2, function(x) sum(is.na(x)))
+These 10 rows are all male names that were used 5 times each in 2015
+
+Merge y2016 and y2015 by your Name column; assign it to final. 
+The client only cares about names that have data for both 2016 and 2015; there should be no NA values in either of your amount of children rows after merging.
+
+
+```{r data_merging_2, echo=TRUE}
 
 final <- merge(y2015, y2016, by=c("First_Name", "Gender"))
+# make sure no NAs
 sapply(final, function(x) sum(is.na(x)))
 
 # show last ten rows in the dataframe
@@ -92,6 +99,8 @@ sapply(final, function(x) sum(is.na(x)))
 
 
 ### 3. Data Summary
+
+Create a new column called Total that adds the amount of children in 2015 and 2016 together.
 
 ```{r data_summary}
 

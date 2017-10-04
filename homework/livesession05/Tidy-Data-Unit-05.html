@@ -179,6 +179,8 @@ y2015 &lt;- read.table(github_local_2, header=FALSE, sep=&quot;,&quot;)
 names(y2015)[c(1,2,3)] &lt;- c(&quot;First_Name&quot;,&quot;Gender&quot;,&quot;Amount_Of_Children_2015&quot;)
 
 # display the last ten rows
+# describe something interesting about these 10 rows
+
 tail(y2015, n = 10L)</code></pre>
 <pre><code>##       First_Name Gender Amount_Of_Children_2015
 ## 33054       Ziyu      M                       5
@@ -191,14 +193,12 @@ tail(y2015, n = 10L)</code></pre>
 ## 33061      Zykir      M                       5
 ## 33062      Zyrus      M                       5
 ## 33063       Zyus      M                       5</code></pre>
-<pre class="r"><code># merge data
-# MergedDataset &lt;- mergeRows(y2015, y2016, common.only=FALSE)
-# MergedDataset2 &lt;- mergeRows(y2015, y2016, common.only=TRUE)
-
+<div id="describe-something-interesting-about-these-last-10-rows" class="section level4">
+<h4>Describe something interesting about these last 10 rows</h4>
+<p>These 10 rows are all male names that were used 5 times each in 2015</p>
+<p>Merge y2016 and y2015 by your Name column; assign it to final. The client only cares about names that have data for both 2016 and 2015; there should be no NA values in either of your amount of children rows after merging.</p>
+<pre class="r"><code>final &lt;- merge(y2015, y2016, by=c(&quot;First_Name&quot;, &quot;Gender&quot;))
 # make sure no NAs
-# sapply(MergedDataset2, function(x) sum(is.na(x)))
-
-final &lt;- merge(y2015, y2016, by=c(&quot;First_Name&quot;, &quot;Gender&quot;))
 sapply(final, function(x) sum(is.na(x)))</code></pre>
 <pre><code>##              First_Name                  Gender Amount_Of_Children_2015 
 ##                       0                       0                       0 
@@ -207,8 +207,10 @@ sapply(final, function(x) sum(is.na(x)))</code></pre>
 <pre class="r"><code># show last ten rows in the dataframe
 #tail(final, n = 10L)</code></pre>
 </div>
+</div>
 <div id="data-summary" class="section level3">
 <h3>3. Data Summary</h3>
+<p>Create a new column called Total that adds the amount of children in 2015 and 2016 together.</p>
 <pre class="r"><code># final$Total &lt;- &quot;Total&quot;
 final$Total &lt;- final$Amount_Of_Children_2015 + final$Amount_Of_Children_2016
 
