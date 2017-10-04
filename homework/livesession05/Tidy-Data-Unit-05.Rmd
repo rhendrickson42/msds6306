@@ -1,0 +1,144 @@
+---
+title: "MSDS 6306 - Doing Data Science - Tidy Data"
+author: "Randall Hendrickson"
+date: "October 4, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Live Session Unit 05 assignment - Tidy Data
+
+```{r global_data}
+library(RCurl)
+
+
+github_file_1 <- "https://raw.githubusercontent.com/rhendrickson42/msds6306/master/homework/livesession05/data/yob2016.txt"
+github_local_1 <- "./yob2016-github.txt"
+
+github_file_2 <- "https://raw.githubusercontent.com/rhendrickson42/msds6306/master/homework/livesession05/data/yob2015.txt"
+github_local_2 <- "./yob2015-github.txt"
+
+# download files from Github for munging
+download.file(github_file_1, destfile = github_local_1, method = "curl")
+download.file(github_file_2, destfile = github_local_2, method = "curl")
+
+```
+
+
+
+### 1. Data Munging
+
+
+
+```{r data_munging}
+
+
+df <- read.table(github_local_1, header=FALSE, sep=";", na.strings="NA", dec=".", strip.white=TRUE)
+
+# read from local filesystem if github is not working
+# df <- read.table("D:/dataScience/doingDS/hw05/yob2016.txt", header=FALSE, sep=";", na.strings="NA", dec=".", strip.white=TRUE)
+
+names(df)[c(1,2,3)] <- c("First_Name","Gender","Amount_Of_Children_2016")
+
+# display the summary and structure of df
+
+#summary of df
+summary(df)
+
+# str of df
+str(df)
+
+# c. find name yyy
+# $ anchors end of line
+df[grep("yyy$", df$First_Name),]
+
+# remove observation from above
+y2016 <- df[-grep("yyy$", df$First_Name),]
+
+```
+
+### 2. Data Merging
+
+
+```{r data_merging, echo=TRUE}
+
+
+# Question 2
+
+y2015 <- read.table(github_local_2, header=FALSE, sep=",")
+names(y2015)[c(1,2,3)] <- c("First_Name","Gender","Amount_Of_Children_2015")
+
+# display the last ten rows
+tail(y2015, n = 10L)
+
+
+# merge data
+# MergedDataset <- mergeRows(y2015, y2016, common.only=FALSE)
+# MergedDataset2 <- mergeRows(y2015, y2016, common.only=TRUE)
+
+# make sure no NAs
+# sapply(MergedDataset2, function(x) sum(is.na(x)))
+
+final <- merge(y2015, y2016, by=c("First_Name", "Gender"))
+sapply(final, function(x) sum(is.na(x)))
+
+# show last ten rows in the dataframe
+#tail(final, n = 10L)
+
+```
+
+
+### 3. Data Summary
+
+```{r data_summary}
+
+# final$Total <- "Total"
+final$Total <- final$Amount_Of_Children_2015 + final$Amount_Of_Children_2016
+
+# a. how many people were given popular names
+total_popular_names <- sum(final$Total)
+total_popular_names
+
+
+# b. 
+
+top10 <- head(final[order(final$Total, decreasing = T),], n = 10)
+top10 
+
+
+# First_Name Gender Amount_Of_Children_2015 Amount_Of_Children_2016 Total
+# 8290        Emma      F                   20415                   19414 39829
+# 19886     Olivia      F                   19638                   19246 38884
+# 19594       Noah      M                   19594                   19015 38609
+# 16114       Liam      M                   18330                   18138 36468
+# 23273     Sophia      F                   17381                   16070 33451
+# 3252         Ava      F                   16340                   16237 32577
+# 17715      Mason      M                   16591                   15192 31783
+# 25241    William      M                   15863                   15668 31531
+# 10993      Jacob      M                   15914                   14416 30330
+# 10682   Isabella      F                   15574                   14722 30296
+
+
+# c. the client is expecting a girl
+
+#girl_names <- filter(final, Gender == "F")
+girl_names <- subset(final, Gender =='F')
+
+girl <- head(girl_names[order(girl_names$Total, decreasing = T),], n = 10)
+
+girl_subset <- girl[c("First_Name", "Total")]
+write.csv(girl_subset, file = "itsagirl.csv", row.names = FALSE)
+
+girl_subset
+
+```
+
+### 4. Upload to GitHub
+
+Here is the location of the GitHub project
+
+https://github.com/rhendrickson42/msds6306/tree/master/homework/livesession05
+
